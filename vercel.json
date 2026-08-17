@@ -1,0 +1,14 @@
+{
+  "framework": null,
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm run typecheck && pnpm --filter @workspace/ledgerline-expense run build",
+  "outputDirectory": "artifacts/ledgerline-expense/dist/public",
+  "functions": {
+    "api/[...path].ts": {
+      "maxDuration": 15
+    }
+  },
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}
