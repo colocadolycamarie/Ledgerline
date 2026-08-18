@@ -1,10 +1,10 @@
 {
   "framework": null,
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm exec tsc --build --force && pnpm --filter @workspace/ledgerline-expense run build",
+  "buildCommand": "pnpm run build:vercel-function && pnpm --filter @workspace/ledgerline-expense run build",
   "outputDirectory": "artifacts/ledgerline-expense/dist/public",
   "functions": {
-    "api/[...path].ts": {
+    "api/[...path].mjs": {
       "maxDuration": 15
     }
   },
