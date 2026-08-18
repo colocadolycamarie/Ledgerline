@@ -1,4 +1,4 @@
-﻿{
+{
   "framework": null,
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm exec tsc --build --force && pnpm --filter @workspace/ledgerline-expense run build",
