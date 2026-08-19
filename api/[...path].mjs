@@ -1018,7 +1018,13 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api", routes_default);
+app.use((req, _res, next) => {
+  if (req.url === "/api" || req.url.startsWith("/api/")) {
+    req.url = req.url.slice(4) || "/";
+  }
+  next();
+});
+app.use(routes_default);
 app.use((err, req, res, _next) => {
   req.log?.error({ err }, "Unhandled request error");
   if (err instanceof multer2.MulterError) {

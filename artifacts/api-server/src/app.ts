@@ -29,7 +29,7 @@ app.use(
   }),
 );
 
-// Credentialed requests (the session cookie) require an explicit origin —
+// Credentialed requests (the session cookie) require an explicit origin â€”
 // the wildcard "*" is rejected by browsers once `credentials: true` is set.
 app.use(
   cors({
@@ -41,9 +41,15 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api", router);
+app.use((req, _res, next) => {
+  if (req.url === "/api" || req.url.startsWith("/api/")) {
+    req.url = req.url.slice(4) || "/";
+  }
+  next();
+});
+app.use(router);
 
-// Centralized error handler — must be registered last, and must keep all
+// Centralized error handler â€” must be registered last, and must keep all
 // four parameters for Express to recognize it as an error handler. Without
 // this, thrown errors (e.g. multer's fileFilter rejections) fall through to
 // Express's default handler, which returns a raw stack trace as HTML.
@@ -64,7 +70,7 @@ app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
     return;
   }
 
-  // Anything else is unexpected — never forward its message to the client,
+  // Anything else is unexpected â€” never forward its message to the client,
   // since it could be a DB error, file path, or other internal detail.
   res.status(500).json({ error: "Something went wrong." });
 });
