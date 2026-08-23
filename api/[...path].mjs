@@ -156,7 +156,9 @@ function verifyPassword(plainPassword, passwordHash) {
 
 // lib/db/src/index.ts
 var __dirname = path.dirname(fileURLToPath(import.meta.url));
-config({ path: path.resolve(__dirname, "../../../.env") });
+if (!process.env.VERCEL) {
+  config({ path: path.resolve(__dirname, "../../../.env"), quiet: true });
+}
 var { Pool } = pg;
 if (!process.env.DATABASE_URL) {
   throw new Error(
