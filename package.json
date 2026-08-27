@@ -9,7 +9,7 @@
                     "pretypecheck":  "pnpm --filter @workspace/db --filter @workspace/api-zod run build",
                     "typecheck:libs":  "tsc --build",
                     "typecheck":  "pnpm --filter @workspace/db --filter @workspace/api-zod run build \u0026\u0026 pnpm run typecheck:libs \u0026\u0026 pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
-                    "build:vercel-function":  "esbuild artifacts/api-server/src/app.ts --bundle --platform=node --format=esm --target=node20 --outfile=\"api/[...path].mjs\" --external:express --external:cors --external:cookie-parser --external:multer --external:jsonwebtoken --external:pino --external:pino-http --external:@vercel/blob --external:pg --external:drizzle-orm --external:drizzle-zod --external:zod --external:bcryptjs --external:dotenv"
+                    "build:vercel-function":  "esbuild artifacts/api-server/src/app.ts --bundle --platform=node --format=esm --target=node20 --outfile=\"api/index.mjs\" --external:express --external:cors --external:cookie-parser --external:multer --external:jsonwebtoken --external:pino --external:pino-http --external:@vercel/blob --external:pg --external:drizzle-orm --external:drizzle-zod --external:zod --external:bcryptjs --external:dotenv"
                 },
     "private":  true,
     "devDependencies":  {

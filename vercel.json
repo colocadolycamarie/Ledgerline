@@ -4,11 +4,12 @@
   "buildCommand": "pnpm run build:vercel-function && pnpm --filter @workspace/ledgerline-expense run build",
   "outputDirectory": "artifacts/ledgerline-expense/dist/public",
   "functions": {
-    "api/[...path].mjs": {
+    "api/index.mjs": {
       "maxDuration": 15
     }
   },
   "rewrites": [
+    { "source": "/api/:match*", "destination": "/api" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
