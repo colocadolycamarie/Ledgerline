@@ -28,7 +28,7 @@ function initials(name: string) {
 export function AppShell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const current = navItems.find((item) => item.href === location)?.label ?? 'Ledgerline';
+  const current = navItems.find((item) => item.href === location)?.label ?? 'Imprest';
   const { user } = useSession();
   const queryClient = useQueryClient();
   const logoutMutation = useLogout();
@@ -47,13 +47,18 @@ export function AppShell({ children }: { children: ReactNode }) {
       <a className="skip-link" href="#main-content">Skip to main content</a>
       <aside className="hidden w-[236px] shrink-0 flex-col bg-[var(--color-ink)] text-[var(--color-paper)] md:flex">
         <div className="border-b border-[rgba(247,245,239,0.18)] px-6 py-6">
-          <Link href="/" className="block" data-testid="link-brand">
-            <div className="font-serif text-[25px] italic leading-none tracking-[-0.04em]">ledgerline</div>
-            <div className="mono-data mt-2 text-[9px] uppercase tracking-[0.16em] text-[#aaa79b]">Expense / Workspace</div>
+          <Link href="/" className="flex items-center gap-2.5" data-testid="link-brand">
+            <svg aria-hidden="true" height="22" viewBox="0 0 22 22" width="22">
+              <circle cx="11" cy="11" fill="none" r="9" stroke="rgba(247,245,239,0.25)" strokeWidth="2.5" />
+              <circle cx="11" cy="11" fill="none" r="9" stroke="var(--color-brass)" strokeDasharray="56.5" strokeDashoffset="18" strokeLinecap="round" strokeWidth="2.5" transform="rotate(-90 11 11)" />
+            </svg>
+            <div>
+              <div className="font-serif text-[22px] leading-none tracking-[-0.02em]">Imprest</div>
+              <div className="mono-data mt-1.5 text-[9px] uppercase tracking-[0.16em] text-[#aaa79b]">The Float Ledger</div>
+            </div>
           </Link>
         </div>
         <div className="px-4 pt-7">
-          <div className="mono-data px-2 pb-2 text-[9px] uppercase tracking-[0.16em] text-[#aaa79b]">Workspace</div>
           <nav aria-label="Primary navigation" className="space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -73,10 +78,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           </nav>
         </div>
         <div className="mt-auto border-t border-[rgba(247,245,239,0.18)] px-6 py-5">
-          <div className="mono-data text-[9px] uppercase tracking-[0.16em] text-[#aaa79b]">Current role</div>
-          <div className="mt-2 flex items-center justify-between gap-2">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex min-w-0 items-center gap-2">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-[var(--color-accent)] text-xs font-semibold text-[var(--color-paper)]">{user ? initials(user.name) : '—'}</div>
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-xs font-semibold text-[var(--color-paper)]">{user ? initials(user.name) : '—'}</div>
               <div className="min-w-0">
                 <div className="truncate text-sm">{user?.name ?? 'Loading…'}</div>
                 <div className="truncate text-[11px] text-[#aaa79b]">{user?.department ?? ''}</div>
@@ -97,7 +101,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </button>
             <div className="mono-data text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">{current}</div>
           </div>
-          <Link className="inline-flex items-center gap-2 border border-[var(--color-accent)] px-3 py-2 text-xs font-semibold text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-paper)]" href="/expenses/new" data-testid="link-new-expense-header">
+          <Link className="inline-flex items-center gap-2 rounded-[3px] border border-[var(--color-accent)] px-3 py-2 text-xs font-semibold text-[var(--color-accent)] transition-[background-color,transform] duration-150 hover:bg-[var(--color-accent)] hover:text-[var(--color-paper)] active:scale-[0.98]" href="/expenses/new" data-testid="link-new-expense-header">
             <FilePlus2 size={15} strokeWidth={1.5} aria-hidden="true" />
             <span>New expense</span>
           </Link>

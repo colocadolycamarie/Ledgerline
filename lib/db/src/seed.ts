@@ -8,7 +8,7 @@ import { db, pool } from "./index";
 import { hashPassword } from "./auth";
 import { usersTable, budgetsTable } from "./schema";
 
-const DEMO_PASSWORD = "ledgerline-demo";
+const DEMO_PASSWORD = "imprest-demo";
 
 async function seed() {
   const existingUsers = await db.select().from(usersTable).limit(1);

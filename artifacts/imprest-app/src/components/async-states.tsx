@@ -23,7 +23,7 @@ export function ErrorState({ onRetry }: { onRetry?: () => void }) {
           <p className="font-serif text-lg italic">The ledger could not be reached.</p>
           <p className="mt-1 text-sm text-[var(--color-ink-muted)]">Your entries are safe. Try the connection again.</p>
           {onRetry ? (
-            <button className="mt-4 border border-[var(--color-ink)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.08em] hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]" onClick={onRetry} type="button" data-testid="button-retry">
+            <button className="mt-4 min-h-11 rounded-[3px] border border-[var(--color-ink)] px-3 text-xs font-semibold uppercase tracking-[0.08em] transition-[background-color,transform] duration-150 hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)] active:scale-[0.98]" onClick={onRetry} type="button" data-testid="button-retry">
               Retry connection
             </button>
           ) : null}

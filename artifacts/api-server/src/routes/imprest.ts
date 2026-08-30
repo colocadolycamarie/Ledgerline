@@ -33,7 +33,7 @@ import {
   deriveDepartment,
   derivePolicyFlag,
   describeSla,
-} from "../lib/ledgerline-format";
+} from "../lib/imprest-format";
 
 const router: IRouter = Router();
 

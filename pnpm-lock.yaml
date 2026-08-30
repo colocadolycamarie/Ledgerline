@@ -136,7 +136,7 @@ importers:
         specifier: 3.1.0
         version: 3.1.0
 
-  artifacts/ledgerline-expense:
+  artifacts/imprest-app:
     dependencies:
       '@tanstack/react-query':
         specifier: 'catalog:'

@@ -1,7 +1,14 @@
-# Ledgerline
+# Imprest — The Float Ledger
 
 Corporate expense management: submit expenses, route them through approvals,
 and track department budgets against real spend.
+
+The name comes from bookkeeping — an *imprest* is a fixed float of cash
+advanced to someone for minor expenses, drawn against and then accounted for
+so the float can be replenished. That's the whole product in one word. See
+`Imprest-UIUX-Design-Brief-v1.md` for the full visual identity and UX spec
+this app is built against (color tokens, the Float Ring / Counterfoil / Stamp
+component language, page-by-page behavior).
 
 ## Stack
 
@@ -37,7 +44,7 @@ pnpm --filter @workspace/db run push    # create tables from the schema
 pnpm --filter @workspace/db run seed    # optional: seed sample users/budgets
 ```
 
-The seed creates 6 demo users, all with password `ledgerline-demo` — sign in
+The seed creates 6 demo users, all with password `imprest-demo` — sign in
 as `maya.chen@example.com` to start as the finance lead, or register a new
 account from the login screen.
 
@@ -45,7 +52,7 @@ Run the app (two terminals):
 
 ```bash
 pnpm --filter @workspace/api-server run dev   # API on :5000
-pnpm --filter @workspace/ledgerline-expense run dev   # frontend on :5173
+pnpm --filter @workspace/imprest-app run dev   # frontend on :5173
 ```
 
 The frontend dev server proxies `/api/*` to the API server (configurable via
@@ -58,7 +65,8 @@ without extra CORS configuration in dev.
 Session-based auth: `POST /api/auth/login` sets an httpOnly cookie (a signed
 JWT); every other `/api` route requires it. Passwords are hashed with bcrypt
 (`lib/db/src/auth.ts`). There's no password-reset flow yet — that's the next
-natural addition if this goes further.
+natural addition if this goes further (it's specced in the design brief's
+Section 8.4/8.5).
 
 ## Receipt storage
 
@@ -74,7 +82,7 @@ WEBP, HEIC, PDF, up to 10MB.
 
 This repo is set up to deploy as a single Vercel project: the frontend
 builds to static files, and the API runs as a serverless function
-(`api/[...path].ts`, which wraps the same Express app used for local dev —
+(`api/[...path].mjs`, which wraps the same Express app used for local dev —
 no route logic is duplicated).
 
 1. **Database**: use a Postgres provider that supports serverless
@@ -115,19 +123,43 @@ no route logic is duplicated).
 
 ## Where things live
 
-- `artifacts/ledgerline-expense` — the React frontend
-- `artifacts/api-server` — the Express API
+- `artifacts/imprest-app` — the React frontend
+- `artifacts/api-server` — the Express API (routes for the product live in
+  `src/routes/imprest.ts`)
 - `lib/db` — Drizzle schema, DB client, password hashing, and the dev seed script
 - `lib/api-spec` — the OpenAPI spec that's the source of truth for the API
   contract
 - `lib/api-zod` / `lib/api-client-react` — generated (do not hand-edit)
 - `scripts` — one-off operational scripts (e.g. `post-merge.sh`)
 
+## Design system
+
+The frontend implements Imprest's own visual language rather than a generic
+component-library look — see `Imprest-UIUX-Design-Brief-v1.md` for the full
+spec. Three components carry the identity and are worth knowing before
+touching UI code:
+
+- **`components/float-ring.tsx`** — the circular ring used everywhere a
+  quantity sits against a boundary (budget consumption, approval SLAs).
+  Never reach for a linear progress bar; use this instead.
+- **`components/counterfoil-card.tsx`** — the torn-stub expense record card.
+  This is the primary way expense records are listed (see the Expenses page).
+- **`components/status-stamp.tsx`** — the rotated, ink-stamp status marker.
+  `CHANGES_REQUESTED` renders with a dashed ring specifically so it's never
+  confused with `SUBMITTED` by color alone — don't change that without
+  updating both.
+
+All color/spacing/type tokens live in `artifacts/imprest-app/src/index.css`.
+
 ## Known gaps
 
 - **Password reset / email verification** — not implemented. Registration and
-  login work; there's no "forgot password" flow.
+  login work; there's no "forgot password" flow yet.
 - **Authorization is all-or-nothing** — any signed-in user can see and act on
   any expense/approval/budget (matches how the UI was originally designed:
   one shared workspace). There's no per-role restriction (e.g. only managers
-  can approve) yet.
+  can approve) yet — the design brief specs a Submitter / Approver / Finance
+  Lead role model as the next real addition here.
+- **No notifications feed, global search, or team/roles settings UI** —
+  specced in the design brief (§8.13, §8.15, §7) but not yet built; each
+  needs new API routes, not just frontend work.

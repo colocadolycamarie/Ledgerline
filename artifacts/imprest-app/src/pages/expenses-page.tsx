@@ -15,12 +15,13 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { AppShell } from '@/components/app-shell';
 import { QuietButton, PrimaryButton } from '@/components/buttons';
+import { CounterfoilCard } from '@/components/counterfoil-card';
 import { EmptyState, ErrorState, LoadingRows } from '@/components/async-states';
+import { FolioNumber } from '@/components/folio-number';
 import { Money } from '@/components/money';
 import { PageTitle } from '@/components/page-title';
 import { SearchField } from '@/components/search-field';
 import { StatusStamp } from '@/components/status-stamp';
-import { formatDate } from '@/lib/format';
 
 const STATUS_FILTERS: Array<[string, string]> = [
   ['', 'All records'],
@@ -279,7 +280,7 @@ export function ExpensesPage() {
         title="Expense ledger"
         detail="A searchable record of every filing. Select a row to inspect policy context, edit a draft, or submit it for review."
         action={
-          <Link className="inline-flex min-h-11 items-center justify-center gap-2 bg-[var(--color-accent)] px-4 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-paper)] hover:bg-[var(--color-accent-hover)]" href="/expenses/new" data-testid="link-expenses-new">
+          <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[3px] bg-[var(--color-accent)] px-4 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-paper)] transition-[background-color,transform] duration-150 hover:bg-[var(--color-accent-hover)] active:scale-[0.98]" href="/expenses/new" data-testid="link-expenses-new">
             <Receipt size={15} aria-hidden="true" /> New expense
           </Link>
         }
@@ -289,7 +290,7 @@ export function ExpensesPage() {
         <div className="flex flex-wrap gap-2" role="group" aria-label="Expense status filters">
           {STATUS_FILTERS.map(([value, label]) => (
             <button
-              className={`min-h-11 border px-3 text-[11px] font-semibold uppercase tracking-[0.06em] ${status === value ? 'border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)]' : 'border-[var(--color-line)] bg-[var(--color-surface)] text-[var(--color-ink-muted)] hover:border-[var(--color-ink)]'}`}
+              className={`min-h-11 rounded-[3px] border px-3 text-[11px] font-semibold uppercase tracking-[0.06em] transition-colors duration-150 ${status === value ? 'border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)]' : 'border-[var(--color-line)] bg-[var(--color-surface)] text-[var(--color-ink-muted)] hover:border-[var(--color-ink)]'}`}
               key={value}
               onClick={() => setStatus(value)}
               type="button"
@@ -311,25 +312,23 @@ export function ExpensesPage() {
           action={<Link className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-accent)]" href="/expenses/new" data-testid="link-empty-new-expense">Create the first expense</Link>}
         />
       ) : (
-        <div className="overflow-x-auto border-t-2 border-[var(--color-line-strong)]">
-          <div className="grid min-w-[760px] grid-cols-[1.5fr_1fr_0.8fr_0.8fr_1fr_0.8fr] border-b border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--color-ink-muted)]">
-            <span>Merchant / description</span><span>Submitter</span><span>Category</span><span>Date</span><span>Status</span><span className="text-right">Amount</span>
-          </div>
+        <div className="space-y-px border-t-2 border-[var(--color-line-strong)] bg-[var(--color-line)]">
           {expenses.map((expense) => (
-            <button className="ledger-row grid min-h-[58px] min-w-[760px] w-full grid-cols-[1.5fr_1fr_0.8fr_0.8fr_1fr_0.8fr] items-center gap-3 px-4 text-left" key={expense.id} onClick={() => setSelectedExpenseId(expense.id)} type="button" data-testid={`row-expense-${expense.id}`}>
-              <span className="min-w-0">
-                <span className="block truncate text-sm font-semibold">{expense.merchant}</span>
-                <span className="mt-1 block truncate text-xs text-[var(--color-ink-muted)]">{expense.description}</span>
-              </span>
-              <span className="truncate text-xs text-[var(--color-ink-muted)]">{expense.submitter}</span>
-              <span className="truncate text-xs">{expense.category}</span>
-              <span className="mono-data text-xs text-[var(--color-ink-muted)]">{formatDate(expense.expenseDate)}</span>
-              <span><StatusStamp status={expense.status} /></span>
-              <span className="mono-data text-right text-sm font-semibold"><Money amount={expense.amount} currency={expense.currency} /></span>
-            </button>
+            <CounterfoilCard
+              amount={expense.amount}
+              currency={expense.currency}
+              date={expense.expenseDate}
+              detail={`${expense.submitter} · ${expense.category}`}
+              key={expense.id}
+              merchant={expense.merchant}
+              onClick={() => setSelectedExpenseId(expense.id)}
+              status={expense.status}
+              testId={`row-expense-${expense.id}`}
+            />
           ))}
         </div>
       )}
+      {expenses.length > 0 ? <FolioNumber count={expenses.length} /> : null}
       {selectedExpenseId ? <ExpenseDetail expenseId={selectedExpenseId} onClose={() => setSelectedExpenseId(null)} /> : null}
     </AppShell>
   );

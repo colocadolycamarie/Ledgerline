@@ -543,7 +543,7 @@ router2.get("/healthz", (_req, res) => {
 });
 var health_default = router2;
 
-// artifacts/api-server/src/routes/ledgerline.ts
+// artifacts/api-server/src/routes/imprest.ts
 import { Router as Router3 } from "express";
 import multer from "multer";
 import { and, desc, eq as eq2, gte, ilike, isNull, lt, or, sql } from "drizzle-orm";
@@ -608,7 +608,7 @@ var HttpError = class extends Error {
   }
 };
 
-// artifacts/api-server/src/lib/ledgerline-format.ts
+// artifacts/api-server/src/lib/imprest-format.ts
 var RECEIPT_REQUIRED_THRESHOLD = 250;
 var APPROVAL_SLA_DAYS = 3;
 function deriveDepartment(costCenter) {
@@ -632,7 +632,7 @@ function describeSla(dueAt, now = /* @__PURE__ */ new Date()) {
   return `Due in ${days} days`;
 }
 
-// artifacts/api-server/src/routes/ledgerline.ts
+// artifacts/api-server/src/routes/imprest.ts
 var router3 = Router3();
 var ALLOWED_RECEIPT_TYPES = /* @__PURE__ */ new Set([
   "image/jpeg",
@@ -963,13 +963,13 @@ router3.get("/budgets", async (_req, res) => {
     )
   );
 });
-var ledgerline_default = router3;
+var imprest_default = router3;
 
 // artifacts/api-server/src/routes/index.ts
 var router4 = Router4();
 router4.use(health_default);
 router4.use("/auth", auth_default);
-router4.use(requireAuth, ledgerline_default);
+router4.use(requireAuth, imprest_default);
 var routes_default = router4;
 
 // artifacts/api-server/src/lib/logger.ts

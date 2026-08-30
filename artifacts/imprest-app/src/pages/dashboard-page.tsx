@@ -8,7 +8,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ArrowDownLeft, ArrowUpRight, Receipt } from 'lucide-react';
 import { Link } from 'wouter';
 import { AppShell } from '@/components/app-shell';
-import { BudgetBar } from '@/components/budget-bar';
+import { FloatRing } from '@/components/float-ring';
 import { ButtonArrow } from '@/components/button-arrow';
 import { EmptyState, ErrorState, LoadingRows } from '@/components/async-states';
 import { Money } from '@/components/money';
@@ -30,11 +30,11 @@ export function DashboardPage() {
   return (
     <AppShell>
       <PageTitle
-        eyebrow={`Ledgerline / ${user?.department ?? ''}`}
+        eyebrow={`Imprest / ${user?.department ?? ''}`}
         title={`Good morning, ${firstName || 'there'}.`}
         detail="Your monthly control surface. Review what moved, what is waiting, and where the company is running hot."
         action={
-          <Link className="inline-flex min-h-11 items-center justify-center gap-2 border border-[var(--color-accent)] px-4 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-paper)]" href="/expenses/new" data-testid="link-dashboard-new-expense">
+          <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[3px] border border-[var(--color-accent)] px-4 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-accent)] transition-[background-color,transform] duration-150 hover:bg-[var(--color-accent)] hover:text-[var(--color-paper)] active:scale-[0.98]" href="/expenses/new" data-testid="link-dashboard-new-expense">
             <Receipt size={15} aria-hidden="true" /> File an expense
           </Link>
         }
@@ -96,15 +96,9 @@ export function DashboardPage() {
               ) : (
                 <div className="border-y border-[var(--color-line)] bg-[var(--color-surface)]">
                   {budgets.slice(0, 4).map((budget) => (
-                    <div className="border-b border-[var(--color-line)] px-4 py-4 last:border-b-0" key={budget.id} data-testid={`budget-preview-${budget.id}`}>
-                      <div className="mb-3 flex items-start justify-between gap-4">
-                        <div>
-                          <div className="text-sm font-semibold">{budget.name}</div>
-                          <div className="mono-data mt-1 text-[10px] uppercase tracking-[0.08em] text-[var(--color-ink-muted)]">{budget.department} / {budget.period}</div>
-                        </div>
-                        <Money amount={budget.spent} className="text-sm font-semibold" />
-                      </div>
-                      <BudgetBar spent={budget.spent} limit={budget.limit} />
+                    <div className="border-b border-[var(--color-line)] px-4 py-5 last:border-b-0" key={budget.id} data-testid={`budget-preview-${budget.id}`}>
+                      <div className="mono-data mb-3 text-[10px] uppercase tracking-[0.08em] text-[var(--color-ink-muted)]">{budget.name} — {budget.department} / {budget.period}</div>
+                      <FloatRing limit={budget.limit} size={72} spent={budget.spent} stroke={6} />
                     </div>
                   ))}
                   <div className="px-4 py-3"><ButtonArrow href="/budgets">View all budgets</ButtonArrow></div>

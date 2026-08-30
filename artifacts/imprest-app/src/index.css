@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&display=swap');
 @import 'tailwindcss';
 
 @theme inline {
   --font-sans: 'IBM Plex Sans', sans-serif;
-  --font-serif: 'IBM Plex Serif', serif;
+  --font-serif: 'Fraunces', serif;
   --font-mono: 'IBM Plex Mono', monospace;
 }
 
@@ -14,18 +14,28 @@
 }
 
 :root {
-  --color-paper: #f7f5ef;
-  --color-ink: #16150f;
-  --color-ink-muted: #5c594e;
+  /* The Float Ledger — Imprest's core palette. See design brief §4.1. */
+  --color-paper: #f5f1e8;
+  --color-ink: #221e17;
+  --color-ink-muted: #6e6558;
   --color-surface: #ffffff;
-  --color-line: #dad5c8;
-  --color-line-strong: #16150f;
-  --color-accent: #a8532b;
-  --color-accent-hover: #8f4322;
-  --color-positive: #2f5233;
-  --color-pending: #7a5c14;
-  --color-negative: #8c3a2b;
-  --color-info: #43506b;
+  --color-line: #dad3c2;
+  --color-line-strong: #221e17;
+  --color-canvas-dark: #1e1a14;
+  --color-muted-on-dark: #b7ac98;
+
+  /* Brass — the graphical-only tint (rings, icons, large numerals, ≥18px) */
+  --color-brass: #a2672e;
+  /* Brass-deep — the text-safe tint (buttons, links, labels, small text) */
+  --color-accent: #8c5726;
+  --color-accent-hover: #74441e;
+
+  /* Status inks — each paired with its own stamp face, see status-stamp.tsx */
+  --color-positive: #2f5d45;
+  --color-pending: #93650f;
+  --color-pending-deep: #7a5209;
+  --color-negative: #8a3626;
+  --color-info: #2c5e6b;
 }
 
 * {
@@ -152,9 +162,9 @@ textarea:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid currentColor;
-  border-radius: 2px;
-  padding: 3px 6px;
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+  padding: 3px 7px;
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 600;
@@ -162,6 +172,64 @@ textarea:focus-visible {
   line-height: 1.1;
   text-transform: uppercase;
   white-space: nowrap;
+  transform: rotate(var(--stamp-tilt, -1.5deg));
+  position: relative;
+}
+
+.stamp::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.stamp--dashed {
+  border-style: dashed;
+}
+
+/* Folio number — the running ledger-page number on every list frame. */
+.folio-number {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-muted);
+  opacity: 0.65;
+}
+
+/* Counterfoil card — the torn/perforated expense-record component. */
+.counterfoil {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+}
+
+.counterfoil::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 108px;
+  width: 0;
+  border-left: 1.5px dashed var(--color-line);
+  transition: right 180ms ease-out;
+}
+
+.counterfoil:hover::before,
+.counterfoil:focus-within::before {
+  right: 112px;
+}
+
+/* Float Ring — the one recurring "quantity against a boundary" shape. */
+.float-ring circle {
+  transition: stroke-dashoffset 500ms ease-out, stroke 220ms ease-out;
 }
 
 .ledger-row {

@@ -58,7 +58,7 @@ function DefaultFallback({ error, resetError }: ErrorFallbackProps) {
         <button
           type="button"
           onClick={resetError}
-          className="mt-5 min-h-11 bg-[var(--color-ink)] px-4 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-paper)] hover:bg-[var(--color-accent)]"
+          className="mt-5 min-h-11 rounded-[3px] bg-[var(--color-ink)] px-4 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-paper)] transition-[background-color,transform] duration-150 hover:bg-[var(--color-accent)] active:scale-[0.98]"
         >
           Try again
         </button>
